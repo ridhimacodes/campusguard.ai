@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: campusguard-ai
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: TINYFISH_API_KEY
+        value: sk-tinyfish-nlKqVMU5RnA86icg-em99B0yYBHIPE85
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b

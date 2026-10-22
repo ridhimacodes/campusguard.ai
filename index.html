@@ -1,0 +1,1555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusGuard.AI — Smarter Research. Brighter Futures.</title>
+  <meta name="description" content="Autonomous live-web student safety and research assistant powered by TinyFish & Groq AI. Protect against PG electricity overcharging, recruitment scams, missed exam notices, and travel disruptions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-error-container": "#93000a",
+            "surface-container-high": "#dfe8ff",
+            "surface-variant": "#d6e3ff",
+            "secondary": "#4a5f84",
+            "on-tertiary-fixed": "#002114",
+            "inverse-primary": "#abc7ff",
+            "on-background": "#0a1c35",
+            "surface-bright": "#f9f9ff",
+            "on-surface-variant": "#414753",
+            "secondary-fixed-dim": "#b2c7f1",
+            "surface-tint": "#005cba",
+            "surface-container-low": "#f0f3ff",
+            "on-tertiary-fixed-variant": "#005137",
+            "outline-variant": "#c1c6d5",
+            "surface-container-highest": "#d6e3ff",
+            "tertiary": "#006949",
+            "inverse-surface": "#21314b",
+            "background": "#f9f9ff",
+            "on-surface": "#0a1c35",
+            "on-error": "#ffffff",
+            "surface-container": "#e8eeff",
+            "primary-fixed-dim": "#abc7ff",
+            "tertiary-container": "#00855d",
+            "tertiary-fixed": "#82f9c4",
+            "inverse-on-surface": "#ecf0ff",
+            "on-tertiary-container": "#f5fff7",
+            "surface": "#f9f9ff",
+            "outline": "#727785",
+            "on-primary-container": "#fefcff",
+            "on-primary-fixed-variant": "#00458f",
+            "secondary-fixed": "#d6e3ff",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#001b3f",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#011b3d",
+            "tertiary-fixed-dim": "#64dca9",
+            "surface-dim": "#cadafc",
+            "on-tertiary": "#ffffff",
+            "primary-fixed": "#d7e3ff",
+            "primary-container": "#1272e0",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#bdd2fd",
+            "primary": "#005ab6",
+            "on-secondary-container": "#455a7f",
+            "on-secondary-fixed-variant": "#32476b"
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+          spacing: { "gutter-mobile": "1rem", "space-xs": "0.25rem", "gutter": "1.25rem", "margin": "2rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2.25rem", "space-sm": "0.5rem", "margin-mobile": "1rem" }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Ambient Animated Glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- =========================================================================
+       1. LANDING PAGE VIEW
+       ========================================================================= -->
+  <div id="landingView" class="w-full text-on-surface bg-surface font-body-md antialiased">
+    <!-- Top Navigation Header -->
+    <header class="w-full max-w-7xl mx-auto px-gutter py-space-md flex items-center justify-between z-30 sticky top-0 bg-surface/85 backdrop-blur-md">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <img alt="CampusGuard.AI Logo" class="w-10 h-10 object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida/AEtjO1W0kNI3f3ix32wWTKoXVcaTqVXobcPxOHujFTeBftP8q2CdUYlSUdnLfZCprFIvfLTarE4D6iVbivGszXc4XmKQ8c-ujBcYG1yCzIv7EgI6opuv24spv-GKjdIHlGCJM57jSspleD21LpG2wDdsodsmTMxbrxIgH1mn2NSsZIpHGInlCkN69Bnlyf1XQt-DNRIYryOK23pK-ONM6MEBP4oPKgwKuKx32AFEse0IskEh-dCN4XvSxvYXZEw"/>
+        <span class="font-headline-md text-headline-md text-on-surface tracking-tight flex items-center">
+          CampusGuard<span class="text-primary font-bold">.AI</span>
+        </span>
+      </div>
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-space-lg text-secondary font-label-lg text-label-lg">
+        <a class="hover:text-primary transition-colors duration-150" href="#features">Features</a>
+        <a href="#how-it-works" class="hover:text-primary transition-colors duration-150">How It Works</a>
+        <a href="#tariff-engine" class="hover:text-primary transition-colors duration-150">Tariff Engine</a>
+        <a href="#pricing" class="hover:text-primary transition-colors duration-150">Pricing</a>
+        <a href="#faq" class="hover:text-primary transition-colors duration-150">FAQ</a>
+      </nav>
+      <!-- Navigation CTAs -->
+      <div class="flex items-center space-x-space-sm">
+        <button id="btnLandingSignIn" onclick="openAuthModal('signin')" class="hidden sm:inline-flex px-4 py-2 text-secondary hover:text-on-surface font-label-lg text-label-lg transition-colors cursor-pointer">
+          Log In
+        </button>
+        <button id="btnLandingLaunch" onclick="showApp()" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:bg-primary-container hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+          Get Protected Free
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative w-full max-w-7xl mx-auto px-gutter pt-space-lg pb-space-xl flex flex-col items-center text-center overflow-hidden">
+      <!-- Subtle Ambient Glow -->
+      <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-primary-fixed/40 blur-[110px] rounded-full pointer-events-none -z-10"></div>
+      <!-- Eyebrow Pill -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-low text-primary font-label-sm text-label-sm shadow-sm mb-space-md">
+        <span class="inline-block w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+        <span>Your campus life, a little safer • Powered by TinyFish Web Radar &amp; Groq AI</span>
+      </div>
+      <!-- Main Headline -->
+      <h1 class="max-w-4xl font-display text-display tracking-tight text-on-surface mb-space-sm">
+        College life is complicated.<br class="hidden sm:inline"/> Staying protected shouldn't be.
+      </h1>
+      <!-- Subtitle -->
+      <p class="max-w-2xl font-body-lg text-body-lg text-secondary mb-space-lg">
+        CampusGuard.AI shields college students from PG electricity overcharging, fake internship traps, and missed exam circulars with real-time autonomous web research.
+      </p>
+      <!-- Hero Dual CTAs -->
+      <div class="flex flex-col sm:flex-row items-center gap-space-sm mb-space-md">
+        <button id="btnHeroGetStarted" onclick="showApp()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-lg shadow-primary/20 hover:bg-primary-container hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+          <span>Start for Free</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+        <button id="btnHeroDemo" onclick="showApp()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-surface-container text-secondary font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 cursor-pointer">
+          Explore Interactive Demo
+        </button>
+      </div>
+      <!-- Social Proof Badge -->
+      <div class="flex items-center gap-2 text-secondary font-label-sm text-label-sm mb-space-xl">
+        <div class="flex -space-x-2 overflow-hidden">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-fixed text-primary font-bold text-[10px]">DU</span>
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary-container text-secondary font-bold text-[10px]">VTU</span>
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-tertiary-fixed text-tertiary font-bold text-[10px]">IIT</span>
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-variant text-on-surface-variant font-bold text-[10px]">+80</span>
+        </div>
+        <span>Trusted by <strong class="text-on-surface font-semibold">14,000+ students</strong> across 80+ universities • Team ThinkStack</span>
+      </div>
+
+      <!-- Hero Interactive Preview Showcase Mockup -->
+      <div class="relative w-full max-w-5xl rounded-3xl bg-surface-container-lowest p-4 sm:p-7 shadow-xl" id="demo-preview">
+        <!-- Top Window Titlebar -->
+        <div class="flex items-center justify-between pb-4 mb-5 bg-surface-container-lowest border-b border-surface-container-low flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-error/70 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#f2b84b] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-tertiary/70 inline-block"></span>
+            <span class="ml-3 font-label-sm text-label-sm text-secondary">CampusGuard.AI Live Terminal • Secure Active Session</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="triggerLiveAutomationDemo()" class="flex items-center gap-1.5 font-label-sm text-label-sm text-primary bg-primary-fixed/60 hover:bg-primary-fixed px-3 py-1 rounded-full font-bold transition-all cursor-pointer shadow-sm">
+              <span class="material-symbols-outlined text-[16px]">play_circle</span>
+              <span>Run Autonomous Radar Demo</span>
+            </button>
+            <div class="flex items-center gap-2 font-label-sm text-label-sm text-secondary bg-surface-container-low px-3 py-1 rounded-full">
+              <span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+              <span>DISCOM &amp; MCA Verified</span>
+            </div>
+          </div>
+        </div>
+        <!-- Floating Mascot Accent -->
+        <div class="absolute -top-7 -right-3 sm:right-6 hidden sm:flex items-center gap-2 bg-surface-container-lowest py-2 px-3.5 rounded-2xl shadow-lg z-20 border border-surface-container-low">
+          <div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+          </div>
+          <div class="text-left">
+            <p class="font-label-sm text-label-sm text-primary font-bold">Mascot Shieldy</p>
+            <p class="font-body-sm text-body-sm text-secondary">"I'm watching your back!"</p>
+          </div>
+        </div>
+        <!-- 3-Part Showcase Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md text-left">
+          <!-- Card 1: PG Tariff Audit -->
+          <div class="rounded-2xl p-5 bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors cursor-pointer" onclick="openToolFromLanding('pg')">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">PG Electricity Audit</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#fef8ec] text-[#d49520] font-label-sm text-label-sm font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#d49520]"></span> Overcharge Alert
+                </span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">North Campus PG #4</h3>
+              <p class="font-body-sm text-body-sm text-secondary mb-4">Meter recorded rate differs radically from applicable state consumer tariff regulations.</p>
+              <div class="bg-surface-container-lowest rounded-xl p-3 mb-3">
+                <div class="flex justify-between items-baseline mb-1">
+                  <span class="font-body-sm text-body-sm text-secondary">Landlord Quote:</span>
+                  <span class="font-headline-sm text-headline-sm text-error font-bold">₹11.50/unit</span>
+                </div>
+                <div class="flex justify-between items-baseline">
+                  <span class="font-body-sm text-body-sm text-secondary">DISCOM Domestic Slab:</span>
+                  <span class="font-label-lg text-label-lg text-tertiary font-bold">₹7.10/unit</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-2 text-primary font-label-sm text-label-sm flex items-center justify-between">
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">gavel</span> Ref: DERC Tariff Order §4.2(b) cited</span>
+              <span class="font-bold">Test Live →</span>
+            </div>
+          </div>
+          <!-- Card 2: Internship Shield -->
+          <div class="rounded-2xl p-5 bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors cursor-pointer" onclick="openToolFromLanding('internship')">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Internship Shield</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-error"></span> Scam Flagged
+                </span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">"Vertex Global Growth"</h3>
+              <p class="font-body-sm text-body-sm text-secondary mb-4">Offer promises remote marketing intern role but demands immediate upfront collateral.</p>
+              <div class="bg-surface-container-lowest rounded-xl p-3 mb-3 space-y-2">
+                <div class="flex justify-between items-center text-body-sm font-body-sm">
+                  <span class="text-secondary">Claimed Stipend</span>
+                  <span class="font-semibold text-on-surface">₹45,000 / month</span>
+                </div>
+                <div class="flex justify-between items-center text-body-sm font-body-sm bg-error-container/40 p-1.5 rounded-lg">
+                  <span class="text-error font-semibold">Demand Detected:</span>
+                  <span class="text-error font-bold">₹1,200 "Laptop Fee"</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-2 text-error font-label-sm text-label-sm flex items-center justify-between">
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">domain_disabled</span> MCA Registry: Domain created 11 days ago</span>
+              <span class="font-bold">Audit →</span>
+            </div>
+          </div>
+          <!-- Card 3: Notice Radar -->
+          <div class="rounded-2xl p-5 bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors cursor-pointer" onclick="openToolFromLanding('notices')">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Notice Radar</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Verified Live
+                </span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Semester Exam Forms</h3>
+              <p class="font-body-sm text-body-sm text-secondary mb-4">Official university registrar portal circular tracked via TinyFish crawler 14m ago.</p>
+              <div class="bg-surface-container-lowest rounded-xl p-3 mb-3">
+                <div class="text-body-sm font-body-sm text-secondary mb-1">Status Update:</div>
+                <p class="font-label-lg text-label-lg text-tertiary font-bold">Extended to March 18, 5:00 PM</p>
+                <p class="font-body-sm text-body-sm text-secondary mt-1">No late penalty fees applicable.</p>
+              </div>
+            </div>
+            <div class="pt-2 text-tertiary font-label-sm text-label-sm flex items-center justify-between">
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">link</span> Source: examination.univ.edu/circ-902</span>
+              <span class="font-bold">Scan →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real Campus Life Context Visual Section -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-lg">
+      <div class="rounded-3xl bg-surface-container p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-space-lg shadow-sm">
+        <div class="max-w-xl text-left">
+          <span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-widest">Built For Real College Reality</span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface mt-2 mb-3">Living away from home is already tough. Don't fight bureaucracy alone.</h2>
+          <p class="font-body-lg text-body-lg text-secondary mb-6">
+            Whether you are navigating greedy PG caretakers, mysterious maintenance clauses, or bogus recruiting agencies, CampusGuard acts as your personal research guardian angel.
+          </p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm">
+              <span class="font-headline-md text-headline-md text-primary font-bold">₹14.2M+</span>
+              <p class="font-body-sm text-body-sm text-secondary mt-1">Estimated unjust PG electricity fees prevented</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm">
+              <span class="font-headline-md text-headline-md text-tertiary font-bold">3,890+</span>
+              <p class="font-body-sm text-body-sm text-secondary mt-1">Fake deposit internship contracts flagged</p>
+            </div>
+          </div>
+        </div>
+        <div class="w-full lg:w-1/2 flex justify-center">
+          <div class="relative w-full max-w-md h-72 rounded-2xl overflow-hidden shadow-md">
+            <img class="w-full h-full object-cover" alt="University students studying together" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSKJNorOv87k3kE8fbR57jjFLlCv9fojt7WnGnmfJ1rvhceAEAEyQdNqNb_qrlmjmjGqUWSvrxDLOTNWBSnW-y49R796TW8Zw6AvK3G4dnby9D_M_Wi0es77FNo2_dnwQ2BMzljksJuiVUx3bGn1RltPyK3ABJsYl1KTCQL6JPxFH6KmxfW-UnXbGLp1F1UVcFRcYkuvDkYcZ8DDp9jDK_CiZ7YtOHd5ow7uZKF-BvZgxtNRteXuCZ"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-5">
+              <span class="text-inverse-on-surface font-label-md text-label-md">Students from Delhi, Bengaluru, Pune, and Hyderabad rely on CampusGuard daily</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust & Core Value Grid (3 cards) -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-xl" id="features">
+      <div class="text-center max-w-2xl mx-auto mb-space-lg">
+        <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider font-bold">Uncompromising Protection</span>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mt-2">Three shields guarding every student routine.</h2>
+        <p class="font-body-md text-body-md text-secondary mt-2">Engineered by combining state regulatory scrapers with Groq's high-speed contextual reasoning.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+        <!-- Card 1 -->
+        <div class="rounded-3xl bg-surface-container-lowest p-7 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between cursor-pointer" onclick="openToolFromLanding('pg')">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-primary-fixed text-primary flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Spot Suspicious Charges</h3>
+            <p class="font-body-md text-body-md text-secondary mb-4">
+              Compare landlord electricity bills against official state DISCOM consumer tariffs. CampusGuard highlights markups, submeter trickery, and quotes specific legal clauses to challenge inflated dues.
+            </p>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-3 text-secondary font-label-sm text-label-sm">
+            ✓ Verified for BESCOM, BSES, Tata Power, MSEB &amp; more
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="rounded-3xl bg-surface-container-lowest p-7 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between cursor-pointer" onclick="openToolFromLanding('internship')">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">work_history</span>
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Investigate Internship Offers</h3>
+            <p class="font-body-md text-body-md text-secondary mb-4">
+              Conducts deep automated audits on recruiter domains, MCA registered corporate numbers, hidden training fee mandates, and template offer letters before you surrender documents or money.
+            </p>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-3 text-secondary font-label-sm text-label-sm">
+            ✓ Real-time registrar check &amp; scam signature heuristics
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="rounded-3xl bg-surface-container-lowest p-7 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between cursor-pointer" onclick="openToolFromLanding('notices')">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-tertiary-fixed text-tertiary flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Stay Ahead of College Notices</h3>
+            <p class="font-body-md text-body-md text-secondary mb-4">
+              Live web radar continuously crawls official university websites and chaotic departmental portals so you never miss an exam deadline, fee exemption, or semester schedule change.
+            </p>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-3 text-secondary font-label-sm text-label-sm">
+            ✓ AI-summarized in under 3 bullet points
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works (Linear 3-step sequence) -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-xl" id="how-it-works">
+      <div class="rounded-3xl bg-surface-container-low p-8 sm:p-14">
+        <div class="text-center max-w-xl mx-auto mb-space-xl">
+          <span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Seamless Process</span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface mt-2">How CampusGuard Works</h2>
+          <p class="font-body-md text-body-md text-secondary mt-1">Zero tedious paperwork. Paste what you have, get instant clarity.</p>
+        </div>
+        <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Step 1 -->
+          <div class="relative z-10 flex flex-col items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-surface-container-lowest shadow-md flex items-center justify-center font-display text-display text-primary font-bold mb-4">
+              1
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Enter Details or Paste</h3>
+            <p class="font-body-md text-body-md text-secondary max-w-xs">
+              Drop your landlord's meter readout message, PDF offer letter, or ambiguous college notice board photo.
+            </p>
+          </div>
+          <!-- Step 2 -->
+          <div class="relative z-10 flex flex-col items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-surface-container-lowest shadow-md flex items-center justify-center font-display text-display text-primary font-bold mb-4">
+              2
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">TinyFish Live Research</h3>
+            <p class="font-body-md text-body-md text-secondary max-w-xs">
+              Our background crawler checks state regulatory gazettes, DISCOM tariffs, and official registrar registries in milliseconds.
+            </p>
+          </div>
+          <!-- Step 3 -->
+          <div class="relative z-10 flex flex-col items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-surface-container-lowest shadow-md flex items-center justify-center font-display text-display text-tertiary font-bold mb-4">
+              3
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Clear Verdict &amp; Next Steps</h3>
+            <p class="font-body-md text-body-md text-secondary max-w-xs">
+              Groq AI converts dense legalese into actionable advice with verified source links and friendly negotiation templates.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Deep Dive Showcase -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-xl" id="tariff-engine">
+      <div class="flex flex-col lg:flex-row items-center gap-space-xl">
+        <!-- Explanatory Text Column -->
+        <div class="w-full lg:w-1/2 text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm mb-3">
+            <span class="material-symbols-outlined text-[16px]">calculate</span>
+            <span>State DISCOM Tariff Engine</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">
+            Say goodbye to "Flat ₹12 per unit" landlord math.
+          </h2>
+          <p class="font-body-lg text-body-lg text-secondary mb-6">
+            In most Indian cities, residential PG accommodation cannot lawfully charge unregulated flat rates exceeding state regulatory commissions (such as DERC, KERC, or MSEDCL) without transparent domestic tariff matching.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-tertiary mt-1">check_circle</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-surface font-semibold">Submeter Calibration Breakdown</p>
+                <p class="font-body-sm text-body-sm text-secondary">Identifies whether common area load is illegally dumped onto your private room tally.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-tertiary mt-1">check_circle</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-surface font-semibold">Auto-Drafted Polite WhatsApp Notice</p>
+                <p class="font-body-sm text-body-sm text-secondary">Generates friendly, firm, and legally referenced messages ready to forward to your PG manager.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Interactive Calculator Demonstration Mockup -->
+        <div class="w-full lg:w-1/2">
+          <div class="rounded-3xl bg-surface-container p-6 sm:p-8 shadow-sm">
+            <div class="flex justify-between items-center mb-5">
+              <span class="font-headline-sm text-headline-sm text-on-surface">Quick Tariff Estimator</span>
+              <span class="font-label-sm text-label-sm text-primary bg-surface-container-lowest px-3 py-1 rounded-full font-semibold">Interactive Demo</span>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block font-label-md text-label-md text-secondary mb-1.5 font-medium">Your State / Electricity Board</label>
+                <div class="w-full h-11 px-3 bg-surface-container-lowest rounded-xl flex items-center justify-between text-on-surface font-body-md text-body-md">
+                  <span>Delhi (BSES Rajdhani / Yamuna)</span>
+                  <span class="material-symbols-outlined text-secondary text-[20px]">expand_more</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-label-md text-label-md text-secondary mb-1.5 font-medium">Units Consumed</label>
+                  <input class="w-full h-11 px-3 bg-surface-container-lowest rounded-xl font-body-md text-body-md text-on-surface outline-none" readonly="" type="text" value="180 units"/>
+                </div>
+                <div>
+                  <label class="block font-label-md text-label-md text-secondary mb-1.5 font-medium">PG Rate Demanded</label>
+                  <input class="w-full h-11 px-3 bg-surface-container-lowest rounded-xl font-body-md text-body-md text-error font-semibold outline-none" readonly="" type="text" value="₹12.00 / unit"/>
+                </div>
+              </div>
+              <!-- Instant Comparison Pill -->
+              <div class="rounded-2xl bg-surface-container-lowest p-4 space-y-2">
+                <div class="flex justify-between font-body-md text-body-md">
+                  <span class="text-secondary">What you were asked to pay:</span>
+                  <span class="font-semibold text-error">₹2,160.00</span>
+                </div>
+                <div class="flex justify-between font-body-md text-body-md">
+                  <span class="text-secondary">Official Applicable Tariff:</span>
+                  <span class="font-bold text-tertiary">₹810.00 (with subsidy)</span>
+                </div>
+                <div class="pt-2 flex justify-between font-label-lg text-label-lg border-t border-surface-container">
+                  <span class="text-on-surface font-bold">Unjust Extra Charge:</span>
+                  <span class="text-error font-bold">+₹1,350.00 / mo</span>
+                </div>
+              </div>
+              <button onclick="openToolFromLanding('pg')" class="w-full py-3 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm cursor-pointer">
+                Run Live PG Tariff Research & Calculate ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-xl text-center" id="pricing">
+      <div class="max-w-2xl mx-auto mb-space-lg">
+        <span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Transparent &amp; Accessible</span>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mt-2">Guaranteed Free For Individual Students</h2>
+        <p class="font-body-md text-body-md text-secondary mt-2">Safety should never be gated behind an unaffordable subscription while you're in school.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg text-left">
+        <!-- Plan 1: Free Student Plan (Active) -->
+        <div class="rounded-3xl bg-surface-container-lowest p-8 shadow-md flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-primary text-on-primary px-4 py-1 rounded-bl-xl font-label-sm text-label-sm font-semibold">
+            Current Active Plan
+          </div>
+          <div>
+            <span class="font-label-lg text-label-lg text-primary font-bold">Free Student Plan</span>
+            <div class="mt-4 mb-2 flex items-baseline">
+              <span class="font-display text-display text-on-surface font-bold">₹0</span>
+              <span class="font-body-md text-body-md text-secondary ml-1.5">/ forever</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-secondary mb-6">Complete protection toolkit designed for undergraduate &amp; postgraduate learners.</p>
+            <ul class="space-y-3 font-body-md text-body-md text-secondary mb-8">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">check</span>
+                <span>Unlimited PG Electricity bill checks</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">check</span>
+                <span>Official DISCOM tariff comparisons</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">check</span>
+                <span>Fake internship &amp; deposit scanner</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">check</span>
+                <span>College notice board radar checks</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">check</span>
+                <span>Plain-language Groq AI summaries</span>
+              </li>
+            </ul>
+          </div>
+          <button onclick="enterAppWithRole('free')" class="w-full py-3.5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:bg-primary-container transition-all cursor-pointer">
+            Get Protected Now
+          </button>
+        </div>
+        <!-- Plan 2: Plus Guardian (Concept) -->
+        <div class="rounded-3xl bg-surface-container-low p-8 shadow-sm flex flex-col justify-between relative opacity-95">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-label-lg text-label-lg text-secondary font-bold">Plus Guardian</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-secondary font-label-sm text-label-sm font-semibold">
+                Coming Soon
+              </span>
+            </div>
+            <div class="mt-4 mb-2 flex items-baseline">
+              <span class="font-headline-lg text-headline-lg text-on-surface font-bold">Concept Plan</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-secondary mb-6">Advanced autonomous peace of mind for parents and out-of-state students.</p>
+            <ul class="space-y-3 font-body-md text-body-md text-secondary mb-8">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Automated WhatsApp alert triggers</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>1-Click Landlord formal dispute notice builder</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Guardian co-parent synchronized alerts</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Priority multi-source crawler re-indexing</span>
+              </li>
+            </ul>
+          </div>
+          <button class="w-full py-3.5 rounded-full bg-surface-container text-secondary font-label-lg text-label-lg cursor-not-allowed" disabled="">
+            Join Early Waitlist
+          </button>
+        </div>
+        <!-- Plan 3: Campus & Hostel Partners (Concept) -->
+        <div class="rounded-3xl bg-surface-container-low p-8 shadow-sm flex flex-col justify-between relative opacity-95">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-label-lg text-label-lg text-secondary font-bold">Campus &amp; Hostel Partners</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-secondary font-label-sm text-label-sm font-semibold">
+                Coming Soon
+              </span>
+            </div>
+            <div class="mt-4 mb-2 flex items-baseline">
+              <span class="font-headline-lg text-headline-lg text-on-surface font-bold">For Unions &amp; Colleges</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-secondary mb-6">Campus-wide safety integration for student welfare bodies &amp; accredited hostels.</p>
+            <ul class="space-y-3 font-body-md text-body-md text-secondary mb-8">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Student Council incident dashboard</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Hostel compliance &amp; fair-billing badge</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Official University Circular broadcast feed</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+                <span>Batch verification for placement cell drives</span>
+              </li>
+            </ul>
+          </div>
+          <button class="w-full py-3.5 rounded-full bg-surface-container text-secondary font-label-lg text-label-lg cursor-not-allowed" disabled="">
+            Contact for Institutional Pilot
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real Student Testimonials -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+        <!-- Testimonial 1 -->
+        <div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+          <p class="font-body-lg text-body-lg text-on-surface mb-6">
+            "Our PG caretaker was charging ₹14/unit claiming commercial rates apply to hostels. CampusGuard pulled the exact state DISCOM clause proving residential status. Our entire floor saved ₹1,400 each every single month."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-primary">
+              AK
+            </div>
+            <div>
+              <p class="font-label-lg text-label-lg text-on-surface font-semibold">Aarav K.</p>
+              <p class="font-body-sm text-body-sm text-secondary">3rd Year CS, North Campus Delhi</p>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="rounded-3xl bg-surface-container-lowest p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+          <p class="font-body-lg text-body-lg text-on-surface mb-6">
+            "I was about to transfer ₹1,500 for a 'mandatory training software license' for a remote internship I found on Telegram. The Internship Shield analyzed the company registry in 2 seconds and warned me it was an active scam."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center font-bold text-tertiary">
+              SM
+            </div>
+            <div>
+              <p class="font-label-lg text-label-lg text-on-surface font-semibold">Sneha M.</p>
+              <p class="font-body-sm text-body-sm text-secondary">Final Year B.Com, Bengaluru</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Frequently Asked Questions -->
+    <section class="w-full max-w-4xl mx-auto px-gutter py-space-xl" id="faq">
+      <div class="text-center mb-space-lg">
+        <span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Got Questions?</span>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mt-2">Frequently Asked Questions</h2>
+      </div>
+      <div class="space-y-4 text-left">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">Is CampusGuard.AI completely free to use?</h4>
+          <p class="font-body-md text-body-md text-secondary">Yes! The core Student Plan is 100% free forever for all individual college students. You can scan PG bills, verify internship offers, and track college notices without adding any card details.</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">How does CampusGuard verify DISCOM electricity tariffs?</h4>
+          <p class="font-body-md text-body-md text-secondary">We scrape official public state regulatory commission tariff schedules (like DERC, KERC, TNERC) and update them in real time so our comparisons reflect actual legitimate slab rates.</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">Does CampusGuard provide legal representation?</h4>
+          <p class="font-body-md text-body-md text-secondary">No. CampusGuard provides informational data research and consumer rights education based on publicly accessible rules and notices. It does not replace formal legal counsel.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Call to Action Strip -->
+    <section class="w-full max-w-7xl mx-auto px-gutter py-space-lg mb-space-xl">
+      <div class="rounded-3xl bg-primary text-on-primary p-8 sm:p-12 text-center relative overflow-hidden shadow-xl">
+        <div class="relative z-10 max-w-2xl mx-auto">
+          <h2 class="font-headline-lg text-headline-lg text-on-primary mb-3">Keep your hard-earned allowance safe.</h2>
+          <p class="font-body-lg text-body-lg text-primary-fixed mb-6">Join thousands of students across India who protect themselves every day with automated research.</p>
+          <button onclick="showApp()" class="inline-flex items-center justify-center px-8 py-4 rounded-full bg-surface-container-lowest text-primary font-label-lg text-label-lg shadow-md hover:bg-surface-container-low transition-all cursor-pointer">
+            Shield My Campus Life Now
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive Footer -->
+    <footer class="w-full bg-surface-container-low pt-space-xl pb-space-lg mt-space-md text-left">
+      <div class="max-w-7xl mx-auto px-gutter">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-8 pb-space-lg">
+          <div class="max-w-sm">
+            <div class="flex items-center space-x-3 mb-3">
+              <img alt="CampusGuard.AI Logo" class="w-8 h-8 object-contain rounded-md" src="https://lh3.googleusercontent.com/aida/AEtjO1W0kNI3f3ix32wWTKoXVcaTqVXobcPxOHujFTeBftP8q2CdUYlSUdnLfZCprFIvfLTarE4D6iVbivGszXc4XmKQ8c-ujBcYG1yCzIv7EgI6opuv24spv-GKjdIHlGCJM57jSspleD21LpG2wDdsodsmTMxbrxIgH1mn2NSsZIpHGInlCkN69Bnlyf1XQt-DNRIYryOK23pK-ONM6MEBP4oPKgwKuKx32AFEse0IskEh-dCN4XvSxvYXZEw"/>
+              <span class="font-headline-sm text-headline-sm text-on-surface">CampusGuard<span class="text-primary font-bold">.AI</span></span>
+            </div>
+            <p class="font-body-sm text-body-sm text-secondary mb-3">
+              Democratizing legal, financial, and educational clarity for Indian university students through autonomous real-time web intelligence.
+            </p>
+            <div class="flex items-center gap-2 text-tertiary font-label-sm text-label-sm">
+              <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+              <span>All systems operational • Team ThinkStack | Kritical Hacks 2026</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 text-left">
+            <div>
+              <p class="font-label-md text-label-md text-on-surface font-bold mb-3">Tools</p>
+              <ul class="space-y-2 font-body-sm text-body-sm text-secondary">
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('pg')">DISCOM Tariff Engine</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('internship')">Internship Scam Radar</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('notices')">Exam Notice Tracker</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('housing')">Rent Dispute Drafter</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-label-md text-label-md text-on-surface font-bold mb-3">Team ThinkStack</p>
+              <ul class="space-y-2 font-body-sm text-body-sm text-secondary">
+                <li><strong>Ridhima</strong> (Team Leader)</li>
+                <li><strong>Naksh Maan</strong></li>
+                <li><strong>Bhumi Khemani</strong></li>
+                <li><strong>Divyanshi Garg</strong></li>
+                <li><strong>Sanghavi Singh</strong></li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-label-md text-label-md text-on-surface font-bold mb-3">Platform</p>
+              <ul class="space-y-2 font-body-sm text-body-sm text-secondary">
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showApp()">Student Dashboard</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openAuthModal('signin')">Sign In / Demo</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('scholarships')">Scholarship Portal</a></li>
+                <li><a class="hover:text-primary transition-colors cursor-pointer" onclick="openToolFromLanding('travel')">Transit Radar</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Mandatory Legal Disclaimer & Copyright -->
+        <div class="pt-6 border-t border-surface-container flex flex-col md:flex-row items-center justify-between text-secondary font-body-sm text-body-sm gap-4">
+          <p class="text-left max-w-2xl text-[12px] leading-relaxed">
+            <strong>Disclaimer:</strong> CampusGuard.AI provides informational analyses based on publicly accessible data and does not constitute formal legal advice. Always verify with official authorities before pursuing formal claims.
+          </p>
+          <p class="text-right text-[12px] whitespace-nowrap">
+            © 2026 CampusGuard.AI • Built with pride by Team ThinkStack for Kritical Hacks.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =========================================================================
+       2. AUTHENTICATION MODAL
+       ========================================================================= -->
+  <div id="authModal" class="hidden" style="display: none !important;">
+    <div class="auth-card">
+      <button class="auth-close" id="btnAuthClose" onclick="closeAuthModal()">✕</button>
+      <div class="auth-header">
+        <div class="logo-shield">✦</div>
+        <h2 id="authModalTitle">Welcome to CampusGuard</h2>
+        <p id="authModalSubtitle">Sign in to sync your verified checks and alerts</p>
+      </div>
+      <!-- Quick Demo Sandbox Helper -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.8rem; font-weight:600; color:var(--cyan-light)">Quick Demo Sandbox</div>
+          <div style="font-size:0.75rem; color:var(--text-muted)">Delhi Univ Student profile</div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="autofillDemoStudent()" style="padding:4px 10px; font-size:0.75rem">
+          Autofill Ananya
+        </button>
+      </div>
+      <form id="authModalForm">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="inputAuthEmail" class="form-control" placeholder="ananya@university.edu" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="inputAuthPassword" class="form-control" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px" id="btnAuthSubmit">
+          Sign In <span>→</span>
+        </button>
+      </form>
+      <div class="auth-divider"><span>OR</span></div>
+      <button type="button" class="btn btn-secondary" style="width:100%" id="btnAuthDemo" onclick="loginDemoStudent()">
+        Continue in Instant Demo Mode ↗
+      </button>
+      <div class="auth-footer">
+        <span id="authToggleText">Don't have an account?</span>
+        <a href="#" id="linkAuthToggle" style="margin-left:6px; font-weight:600">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. MAIN APPLICATION DASHBOARD & TOOLS SHELL
+       ========================================================================= -->
+  <div id="appShell" class="hidden" style="display: none !important;">
+    <!-- App Sidebar -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="logo-shield" style="width:32px; height:32px; font-size:1rem">✦</div>
+        <div>CampusGuard<span>.AI</span></div>
+      </div>
+      
+      <div class="side-nav">
+        <div class="nav-section-label">OVERVIEW</div>
+        <button class="nav-item active" data-view="dashboard">
+          <div class="nav-left"><span class="nav-icon">⌂</span><span>Dashboard</span></div>
+          <span class="pill pill-emerald" style="padding:1px 6px; font-size:0.7rem">LIVE</span>
+        </button>
+        <button class="nav-item" data-view="action-needed">
+          <div class="nav-left"><span class="nav-icon">♧</span><span>Action Needed</span></div>
+          <span class="nav-badge" id="badgeActionCount">0</span>
+        </button>
+        <button class="nav-item" data-view="monthly-report">
+          <div class="nav-left"><span class="nav-icon">▥</span><span>Monthly Report</span></div>
+        </button>
+        <button class="nav-item" data-view="history">
+          <div class="nav-left"><span class="nav-icon">▤</span><span>Check History</span></div>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:14px">PROTECTION TOOLS</div>
+        <button class="nav-item" data-view="pg">
+          <div class="nav-left"><span class="nav-icon">⌁</span><span>PG Bill Checker</span></div>
+        </button>
+        <button class="nav-item" data-view="notices">
+          <div class="nav-left"><span class="nav-icon">☷</span><span>College Notices</span></div>
+        </button>
+        <button class="nav-item" data-view="scholarships">
+          <div class="nav-left"><span class="nav-icon">🎓</span><span>Scholarships</span></div>
+        </button>
+        <button class="nav-item" data-view="travel">
+          <div class="nav-left"><span class="nav-icon">🚇</span><span>Transit Disruptions</span></div>
+        </button>
+        <button class="nav-item" data-view="internship">
+          <div class="nav-left"><span class="nav-icon">✦</span><span>Internship Shield</span></div>
+        </button>
+        <button class="nav-item" data-view="housing">
+          <div class="nav-left"><span class="nav-icon">🏠</span><span>Tenant Guide</span></div>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:14px">AI COPILOT</div>
+        <button class="nav-item" data-view="assistant">
+          <div class="nav-left"><span class="nav-icon">♡</span><span>Guardian AI</span></div>
+          <span class="pill pill-cyan" style="padding:1px 6px; font-size:0.7rem">GROQ</span>
+        </button>
+        <button class="nav-item" data-view="profile">
+          <div class="nav-left"><span class="nav-icon">●</span><span>Student Profile</span></div>
+        </button>
+      </div>
+
+      <!-- User Mini Profile in Sidebar -->
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar" id="sidebarAvatar">S</div>
+          <div class="user-details">
+            <div class="user-name" id="sidebarUserName">Student</div>
+            <div class="user-sub" id="sidebarUserCollege">CampusGuard User</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnSignOut" title="Sign out" style="padding:6px 10px">↗</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Topbar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="mobile-sidebar-toggle" id="btnMobileSidebarToggle">☰</button>
+          <div class="topbar-search">
+            <span>⌕</span>
+            <input type="text" id="topbarSearchInput" placeholder="Quick search tools, notices, bills…">
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="pill pill-cyan" id="topbarStatusPill">
+            <span class="pulse-dot"></span>
+            <span>TinyFish Active</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnQuickProfile">Edit Profile</button>
+          <button class="btn btn-gradient btn-sm" onclick="showView('pg')">+ New Scan</button>
+        </div>
+      </header>
+
+      <!-- App View Container -->
+      <div class="app-view-container">
+
+        <!-- ================= VIEW 1: DASHBOARD ================= -->
+        <div id="view-dashboard" class="page-view active">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1 id="dashGreeting">Welcome back, Student!</h1>
+              <p>All research radars active. Live evidence updated from official state and college portals.</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-secondary btn-sm" onclick="refreshDashboardAll()">↻ Refresh All Data</button>
+            </div>
+          </div>
+
+          <!-- Quick Stats Grid -->
+          <div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:28px">
+            <div class="metric-box">
+              <small>PROTECTION LEVEL</small>
+              <div class="metric-value" style="color:var(--cyan-light)" id="statProtectionScore">Active 98%</div>
+            </div>
+            <div class="metric-box">
+              <small>TOTAL LIVE SCANS</small>
+              <div class="metric-value" id="statTotalScans">0</div>
+            </div>
+            <div class="metric-box">
+              <small>OFFICIAL SOURCES</small>
+              <div class="metric-value" id="statSourcesVerified">0</div>
+            </div>
+            <div class="metric-box">
+              <small>ACTION ITEMS</small>
+              <div class="metric-value" style="color:var(--amber)" id="statActionItems">0</div>
+            </div>
+          </div>
+
+          <!-- Autonomous Radar Automation Run Card -->
+          <div class="card" style="margin-bottom:28px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(16, 185, 129, 0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:12px">
+              <div>
+                <div style="display:flex; align-items:center; gap:8px">
+                  <span class="pill pill-emerald" style="font-size:0.75rem">⚡ FULL AUTOMATION</span>
+                  <h3 style="margin:0">Autonomous Campus Radar Run</h3>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px">
+                  Execute all 4 research radars (Tariffs, Notices, Scholarships, Transit) automatically using TinyFish & Groq AI.
+                </p>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center">
+                <button class="btn btn-gradient" id="btnRunFullAutomation" onclick="startAutonomousRun()">
+                  ▶ Execute Automation Run
+                </button>
+              </div>
+            </div>
+            <div id="automationProgressContainer" class="hidden" style="margin-top:16px; padding:14px; background:var(--bg-card); border-radius:12px; border:1px solid var(--border)">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <span id="automationStatusText" style="font-weight:600; font-size:0.9rem">Initializing Autonomous Radar…</span>
+                <span id="automationProgressPercent" style="font-size:0.85rem; color:var(--cyan-light)">0%</span>
+              </div>
+              <div style="width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; margin-bottom:12px">
+                <div id="automationProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, var(--emerald), var(--cyan-light)); transition:width 0.4s ease"></div>
+              </div>
+              <div id="automationStepList" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; font-size:0.85rem">
+                <div id="autoStep-pg" class="status-stage">1. PG Tariff Audit</div>
+                <div id="autoStep-notices" class="status-stage">2. College Notices</div>
+                <div id="autoStep-scholarship" class="status-stage">3. Scholarships</div>
+                <div id="autoStep-travel" class="status-stage">4. Transit Alerts</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Needed on Dashboard -->
+          <div class="card" style="margin-bottom:28px">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+              <div style="display:flex; align-items:center; gap:8px">
+                <span style="color:var(--amber); font-size:1.2rem">♧</span>
+                <h3>Action Needed & Important Deadlines</h3>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="showView('action-needed')">View All Actions →</button>
+            </div>
+            <div id="dashActionList" class="result-container">
+              <p style="color:var(--text-muted); font-size:0.95rem">No urgent deadlines or flagged issues right now. Run a check to identify action items.</p>
+            </div>
+          </div>
+
+          <!-- Quick Tool Launch Grid -->
+          <h3 style="margin-bottom:16px">Campus Research Tools</h3>
+          <div class="features-grid" style="margin-bottom:32px">
+            <div class="card feature-card" onclick="showView('pg')">
+              <div class="feature-icon-wrap">⌁</div>
+              <h3>PG Bill Checker</h3>
+              <p>Audit private submeter bills against official residential DISCOM tariff orders.</p>
+              <div class="feature-footer"><span>Launch Checker →</span></div>
+            </div>
+            <div class="card feature-card" onclick="showView('notices')">
+              <div class="feature-icon-wrap">☷</div>
+              <h3>College Notice Radar</h3>
+              <p>Track datesheets, admit cards, exam circulars, and fee deadlines.</p>
+              <div class="feature-footer"><span>Launch Radar →</span></div>
+            </div>
+            <div class="card feature-card" onclick="showView('scholarships')">
+              <div class="feature-icon-wrap">🎓</div>
+              <h3>Scholarship Finder</h3>
+              <p>Discover state and national government scholarships and matching eligibility.</p>
+              <div class="feature-footer"><span>Find Scholarships →</span></div>
+            </div>
+            <div class="card feature-card" onclick="showView('travel')">
+              <div class="feature-icon-wrap">🚇</div>
+              <h3>Transit Disruptions</h3>
+              <p>Official alerts for metro delays, bus diversions, and campus transit notices.</p>
+              <div class="feature-footer"><span>Check Routes →</span></div>
+            </div>
+            <div class="card feature-card" onclick="showView('internship')">
+              <div class="feature-icon-wrap">✦</div>
+              <h3>Internship Scam Shield</h3>
+              <p>Investigate job offers for upfront fee requests and unverified recruiter domains.</p>
+              <div class="feature-footer"><span>Verify Offer →</span></div>
+            </div>
+            <div class="card feature-card" onclick="showView('housing')">
+              <div class="feature-icon-wrap">🏠</div>
+              <h3>PG Housing Guide</h3>
+              <p>Tenant checklist, deposit ceiling rules, and submeter clauses.</p>
+              <div class="feature-footer"><span>Open Guide →</span></div>
+            </div>
+          </div>
+
+          <!-- Monthly Snapshot on Dashboard -->
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+              <h3>Monthly Research & Tariff Snapshot</h3>
+              <button class="btn btn-secondary btn-sm" onclick="exportMonthlyReportText()">Export Text ↓</button>
+            </div>
+            <div id="dashMonthlyContent">
+              <p style="color:var(--text-muted)">Generating monthly report from your verified scan history…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 2: PG BILL CHECKER ================= -->
+        <div id="view-pg" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>PG Electricity Tariff Checker</h1>
+              <p>Research official state DISCOM tariffs and investigate quoted charges with evidence.</p>
+            </div>
+            <div class="pill pill-cyan"><span class="pulse-dot"></span> TINYFISH LIVE TARIFF FLOW</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <!-- Form Card -->
+            <div class="card form-card">
+              <h2><span>⌁</span> Enter Bill Details</h2>
+
+              <div class="form-group autocomplete-box">
+                <label>PG Location (Area, Locality, or Landmark)</label>
+                <input type="text" id="pgPlaceInput" class="form-control" placeholder="e.g. Rohini Sector 16, New Delhi" autocomplete="off">
+                <div id="pgPlaceDropdown" class="autocomplete-dropdown"></div>
+                <small style="color:var(--text-dim); font-size:0.75rem">Google Places assists location identification; DISCOM is verified next.</small>
+              </div>
+
+              <div class="form-group">
+                <label>State</label>
+                <select id="pgStateSelect" class="form-control">
+                  <option value="Delhi">Delhi (DERC)</option>
+                  <option value="Haryana">Haryana (HERC)</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh (UPERC)</option>
+                  <option value="Maharashtra">Maharashtra (MERC)</option>
+                  <option value="Karnataka">Karnataka (KERC)</option>
+                  <option value="Punjab">Punjab (PSERC)</option>
+                  <option value="Other">Other State</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn btn-secondary" style="width:100%; margin-bottom:16px" id="btnDiscoverDiscom">
+                <span>Find Official DISCOM & Tariff Pages ↗</span>
+              </button>
+
+              <!-- Provider Discovery Results -->
+              <div id="discomDiscoveryBox" style="margin-bottom:16px"></div>
+
+              <div class="form-group">
+                <label>Electricity Distribution Company (DISCOM)</label>
+                <select id="pgDiscomSelect" class="form-control">
+                  <option value="BSES Rajdhani Power Limited (BRPL)">BSES Rajdhani (BRPL)</option>
+                  <option value="BSES Yamuna Power Limited (BYPL)">BSES Yamuna (BYPL)</option>
+                  <option value="Tata Power Delhi Distribution (TPDDL)">Tata Power Delhi (TPDDL)</option>
+                  <option value="NDMC electricity">NDMC Electricity</option>
+                  <option value="Dakshin Haryana Bijli Vitran (DHBVN)">DHBVN (Haryana)</option>
+                  <option value="Uttar Haryana Bijli Vitran (UHBVN)">UHBVN (Haryana)</option>
+                  <option value="Noida Power Company Limited (NPCL)">NPCL (Noida/UP)</option>
+                  <option value="Maharashtra State Electricity (MSEDCL)">MSEDCL (Maharashtra)</option>
+                  <option value="Bangalore Electricity Supply (BESCOM)">BESCOM (Karnataka)</option>
+                  <option value="Other DISCOM">Other / Unknown Provider</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Connection & Meter Arrangement</label>
+                <select id="pgBillTypeSelect" class="form-control">
+                  <option value="submeter">PG Landlord Private Submeter</option>
+                  <option value="direct">Direct DISCOM Consumer Meter</option>
+                </select>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+                <div class="form-group">
+                  <label>Units Consumed (kWh)</label>
+                  <input type="number" id="pgUnitsInput" class="form-control" placeholder="180" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label>Amount Charged (₹)</label>
+                  <input type="number" id="pgChargedInput" class="form-control" placeholder="2200" min="0" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Tariff Source URL <small>(Autofilled by TinyFish; you may edit)</small></label>
+                <input type="url" id="pgTariffUrlInput" class="form-control" placeholder="Will be retrieved from DISCOM tariff schedule">
+              </div>
+
+              <button type="button" class="btn btn-primary" style="width:100%; margin-top:8px" id="btnRunPgCheck">
+                Run Live Tariff Research & Calculate →
+              </button>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card" id="pgResultContainer">
+              <div class="empty-result">
+                <div class="icon-large">⌁</div>
+                <h3>Ready for Tariff Audit</h3>
+                <p>TinyFish will search state electricity commission orders, extract residential slabs, and calculate your fair domestic estimate.</p>
+                <div class="status-stages">
+                  <span class="status-stage">1 · Search Tariff Order</span>
+                  <span class="status-stage">2 · Fetch DISCOM Slabs</span>
+                  <span class="status-stage">3 · Step-by-Step Calculation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 3: COLLEGE NOTICES ================= -->
+        <div id="view-notices" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>College Notice Radar & Exam Board</h1>
+              <p>Real-time official university notice tracking, datesheets, and deadline alerts.</p>
+            </div>
+            <div class="pill pill-cyan"><span class="pulse-dot"></span> LIVE WEB RADAR</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <div class="card form-card">
+              <h2><span>☷</span> Select Campus & Categories</h2>
+
+              <div class="form-group autocomplete-box">
+                <label>College / University Name</label>
+                <input type="text" id="noticeCollegeInput" class="form-control" placeholder="e.g. Delhi Technological University" autocomplete="off">
+                <div id="noticeCollegeDropdown" class="autocomplete-dropdown"></div>
+              </div>
+
+              <div class="form-group">
+                <label>Notice Category</label>
+                <select id="noticeCategorySelect" class="form-control">
+                  <option value="all">All Notice Categories</option>
+                  <option value="exam notifications">Exam Notifications</option>
+                  <option value="examination schedules and date sheets">Examination Schedules & Date Sheets</option>
+                  <option value="admit cards">Admit Cards</option>
+                  <option value="results">Results</option>
+                  <option value="registration and examination forms">Registration & Exam Forms</option>
+                  <option value="academic calendar and semester dates">Academic Calendar & Semester Dates</option>
+                  <option value="admissions">Admissions</option>
+                  <option value="scholarships and financial aid">Scholarships & Financial Aid</option>
+                  <option value="internships and placements">Internships & Placements</option>
+                  <option value="college events">College Events</option>
+                  <option value="general university notices">General University Notices</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Keyword Search (Optional)</label>
+                <input type="text" id="noticeKeywordInput" class="form-control" placeholder="e.g. End Semester Date Sheet 2026">
+              </div>
+
+              <div class="form-group">
+                <label>Official Notice Portal URL (Optional)</label>
+                <input type="url" id="noticeUrlInput" class="form-control" placeholder="https://college.ac.in/notices">
+              </div>
+
+              <button type="button" class="btn btn-primary" style="width:100%" id="btnRunNoticeCheck">
+                Update Notices from Official Portal ↻
+              </button>
+
+              <!-- Exam Notice AI Assistant Question Box -->
+              <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border-subtle)">
+                <h4 style="margin-bottom:10px; font-size:1rem; color:var(--cyan-light)">💬 Ask Exam Notice Assistant</h4>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px">Ask a specific question like "What is the registration deadline?" or "Has the datesheet been released?".</p>
+                <div class="form-group">
+                  <input type="text" id="noticeAssistantQuestion" class="form-control" placeholder="Ask about exam dates, circulars, or admit cards…">
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnAskNoticeAssistant">Ask Assistant →</button>
+                <div id="noticeAssistantResponse" style="margin-top:12px; font-size:0.9rem"></div>
+              </div>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card" id="noticeResultContainer">
+              <div class="empty-result">
+                <div class="icon-large">☷</div>
+                <h3>Waiting to Scan Notices</h3>
+                <p>TinyFish will inspect your university's official .ac.in portal and extract structured datesheets, circulars, and deadlines.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 4: SCHOLARSHIP FINDER ================= -->
+        <div id="view-scholarships" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Scholarship & Financial Aid Finder</h1>
+              <p>Discover government and institutional scholarships matched to your education profile.</p>
+            </div>
+            <div class="pill pill-emerald"><span class="pulse-dot"></span> NSP & STATE PORTALS</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <div class="card form-card">
+              <h2><span>🎓</span> Filter Criteria</h2>
+              
+              <div class="form-group">
+                <label>State / Region</label>
+                <select id="schStateSelect" class="form-control">
+                  <option value="All India">All India / Central Schemes</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Punjab">Punjab</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Study Level</label>
+                <select id="schLevelSelect" class="form-control">
+                  <option value="Undergraduate">Undergraduate (B.Tech, B.Sc, B.A, B.Com)</option>
+                  <option value="Postgraduate">Postgraduate (M.Tech, M.Sc, MBA)</option>
+                  <option value="Diploma">Diploma / Polytechnic</option>
+                  <option value="PhD">Doctoral / PhD</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Course / Discipline</label>
+                <input type="text" id="schCourseInput" class="form-control" placeholder="e.g. Computer Science Engineering">
+              </div>
+
+              <button type="button" class="btn btn-primary" style="width:100%" id="btnRunScholarshipCheck">
+                Search Verified Scholarships →
+              </button>
+            </div>
+
+            <div class="card" id="scholarshipResultContainer">
+              <div class="empty-result">
+                <div class="icon-large">🎓</div>
+                <h3>Search National Scholarship Registry</h3>
+                <p>TinyFish scans official portals for active schemes, eligibility terms, required documents, and application links.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 5: TRANSIT DISRUPTIONS ================= -->
+        <div id="view-travel" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Student Travel & Transit Disruption Alerts</h1>
+              <p>Official service alerts, metro line maintenance, and campus route diversions.</p>
+            </div>
+            <div class="pill pill-cyan"><span class="pulse-dot"></span> TRANSIT FEEDS</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <div class="card form-card">
+              <h2><span>🚇</span> Location & Route</h2>
+
+              <div class="form-group">
+                <label>Transit Agency / Line / Area</label>
+                <input type="text" id="travelLocationInput" class="form-control" placeholder="e.g. Delhi Metro Yellow Line or Kashmere Gate">
+              </div>
+
+              <div class="form-group">
+                <label>Quick Transit Presets</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="setTravelPreset('Delhi Metro DMRC')">Delhi Metro (DMRC)</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="setTravelPreset('DTC Bus Routes')">DTC Buses</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="setTravelPreset('Mumbai Metro Western Railway')">Mumbai Local/Metro</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="setTravelPreset('Namma Metro Bangalore')">Namma Metro</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-primary" style="width:100%; margin-top:8px" id="btnRunTravelCheck">
+                Check Live Transit Notices →
+              </button>
+            </div>
+
+            <div class="card" id="travelResultContainer">
+              <div class="empty-result">
+                <div class="icon-large">🚇</div>
+                <h3>No Travel Alerts Queried</h3>
+                <p>Select your transit network or enter a station to fetch verified disruption bulletins.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 6: INTERNSHIP SCAM SHIELD ================= -->
+        <div id="view-internship" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Internship & Offer Scam Checker</h1>
+              <p>Investigate job opportunities and offer letters for recruitment fraud markers.</p>
+            </div>
+            <div class="pill pill-rose"><span class="pulse-dot"></span> RECRUITMENT AUDIT</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <div class="card form-card">
+              <h2><span>✦</span> Offer Details</h2>
+
+              <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" id="internCompanyInput" class="form-control" placeholder="e.g. TechCorp Solutions Ltd">
+              </div>
+
+              <div class="form-group">
+                <label>Company Website / Careers Portal</label>
+                <input type="url" id="internWebsiteInput" class="form-control" placeholder="https://techcorp.com">
+              </div>
+
+              <div class="form-group">
+                <label>Offer Text, Email Header, or Message</label>
+                <textarea id="internOfferInput" class="form-control" rows="8" placeholder="Paste the offer letter, recruiter WhatsApp/Telegram message, or email snippet…"></textarea>
+              </div>
+
+              <button type="button" class="btn btn-primary" style="width:100%" id="btnRunInternCheck">
+                Audit Offer with TinyFish →
+              </button>
+            </div>
+
+            <div class="card" id="internResultContainer">
+              <div class="empty-result">
+                <div class="icon-large">✦</div>
+                <h3>Ready to Audit Offer</h3>
+                <p>TinyFish inspects the official company domain while Groq analyzes fee demands, suspicious domains, and hiring red flags.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 7: HOUSING & TENANT GUIDE ================= -->
+        <div id="view-housing" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Student Housing & Tenant Practical Guide</h1>
+              <p>Essential checklist, deposit refund rules, and legal protections before signing a lease.</p>
+            </div>
+            <div class="pill pill-cyan"><span class="pulse-dot"></span> MODEL TENANCY ACT</div>
+          </div>
+
+          <div class="tool-layout-grid">
+            <div class="card form-card">
+              <h2><span>🏠</span> Tenant Checklist</h2>
+              <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px">Track your rental precautions. Progress is saved automatically.</p>
+              
+              <div style="display:flex; flex-direction:column; gap:12px" id="tenantChecklist">
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer">
+                  <input type="checkbox" id="chk1" onchange="saveChecklist()">
+                  <span><strong>Inspect Submeter & Master DISCOM Bill:</strong> Ask landlord for the consumer category and recent bill to verify slab rates.</span>
+                </label>
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer">
+                  <input type="checkbox" id="chk2" onchange="saveChecklist()">
+                  <span><strong>Security Deposit Refund Clause:</strong> Ensure written agreement defines max 30-day refund turnaround and receipt-backed deductions.</span>
+                </label>
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer">
+                  <input type="checkbox" id="chk3" onchange="saveChecklist()">
+                  <span><strong>Notice Period Agreement:</strong> 30-day standard notice period documented in writing before paying token money.</span>
+                </label>
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer">
+                  <input type="checkbox" id="chk4" onchange="saveChecklist()">
+                  <span><strong>Inventory & Condition Report:</strong> Photograph room furniture, geysers, switches upon move-in to avoid deposit forfeiture.</span>
+                </label>
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer">
+                  <input type="checkbox" id="chk5" onchange="saveChecklist()">
+                  <span><strong>Maintenance & Water Charge Clarity:</strong> Confirm if common area charges are included or billed separately.</span>
+                </label>
+              </div>
+
+              <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-subtle)">
+                <button type="button" class="btn btn-secondary" style="width:100%" id="btnResearchTenantRights">
+                  Research State Rent Regulations with TinyFish ↗
+                </button>
+              </div>
+            </div>
+
+            <div class="card" id="housingGuidanceContainer">
+              <div class="empty-result">
+                <div class="icon-large">🏠</div>
+                <h3>Official Tenant Rights Guidance</h3>
+                <p>Click "Research State Rent Regulations" to pull current guidelines under state rent control acts and consumer forum precedents.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 8: ACTION NEEDED ================= -->
+        <div id="view-action-needed" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Action Needed & Urgent Follow-ups</h1>
+              <p>Only verified deadlines, flagged bill markups, and warnings from your scans appear here.</p>
+            </div>
+          </div>
+          <div class="card" id="fullActionListContainer">
+            <div class="empty-result">
+              <div class="icon-large">♧</div>
+              <h3>No Actions Pending</h3>
+              <p>Items appear here when a check detects an overcharge, an offer with red flags, or an upcoming exam/scholarship deadline.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 9: MONTHLY REPORT ================= -->
+        <div id="view-monthly-report" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Monthly Research Report</h1>
+              <p>Summary of completed research checks, verified official sources, and trends.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="exportMonthlyReportText()">Export Text ↓</button>
+          </div>
+          <div class="card" id="fullMonthlyReportContainer">
+            <p style="color:var(--text-muted)">Generating report…</p>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 10: CHECK HISTORY ================= -->
+        <div id="view-history" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Research History</h1>
+              <p>All checks executed across all tools with sources and timestamps.</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-secondary btn-sm" onclick="exportHistoryJson()">Export JSON ↓</button>
+              <button class="btn btn-secondary btn-sm" onclick="clearHistoryConfirm()">Clear History</button>
+            </div>
+          </div>
+          <div class="card" id="historyListContainer">
+            <div class="empty-result">
+              <div class="icon-large">▤</div>
+              <h3>No History Recorded</h3>
+              <p>Run any of the 6 research tools to record verifiable evidence.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 11: GUARDIAN AI ASSISTANT ================= -->
+        <div id="view-assistant" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Guardian AI — Student Research Copilot</h1>
+              <p>Ask questions about notices, bill calculations, internship warnings, or scholarships.</p>
+            </div>
+            <div class="pill pill-cyan"><span class="pulse-dot"></span> GROQ TURBO ASSISTANT</div>
+          </div>
+          <div class="card" style="display:flex; flex-direction:column; height:600px">
+            <div class="drawer-messages" id="mainAssistantMessages" style="flex:1">
+              <div class="chat-bubble assistant">
+                Hi! ♡ I'm <strong>Guardian AI</strong>. I can help interpret evidence from your PG bills, inspect internship offers, answer university exam questions, and locate scholarship deadlines. What would you like to know?
+              </div>
+            </div>
+            <form id="mainAssistantForm" class="drawer-input-form">
+              <input type="text" id="mainAssistantInput" placeholder="Ask Guardian AI anything about bills, notices, offers…" required>
+              <button type="submit" class="btn btn-gradient btn-sm">Send ↗</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 12: STUDENT PROFILE ================= -->
+        <div id="view-profile" class="page-view">
+          <div class="view-header">
+            <div class="view-header-title">
+              <h1>Student Profile & Campus Settings</h1>
+              <p>Saved preferences prefill your tools automatically so you never have to re-enter them.</p>
+            </div>
+          </div>
+          <div class="card form-card" style="max-width:680px">
+            <form id="profileForm">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="profName" class="form-control" placeholder="e.g. Ananya Sharma" required>
+              </div>
+              <div class="form-group autocomplete-box">
+                <label>College / University</label>
+                <input type="text" id="profCollege" class="form-control" placeholder="e.g. Delhi Technological University" required>
+                <div id="profCollegeDropdown" class="autocomplete-dropdown"></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+                <div class="form-group">
+                  <label>Course / Program</label>
+                  <input type="text" id="profCourse" class="form-control" placeholder="e.g. B.Tech Computer Engineering">
+                </div>
+                <div class="form-group">
+                  <label>Year / Semester</label>
+                  <input type="text" id="profSemester" class="form-control" placeholder="e.g. 3rd Year / 6th Semester">
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+                <div class="form-group">
+                  <label>State</label>
+                  <select id="profState" class="form-control">
+                    <option value="Delhi">Delhi</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>PG Locality / Area</label>
+                  <input type="text" id="profLocality" class="form-control" placeholder="e.g. Rohini Sector 16">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Preferred Notice Category</label>
+                <select id="profNoticeCategory" class="form-control">
+                  <option value="all">All Notice Categories</option>
+                  <option value="exam notifications">Exam Notifications</option>
+                  <option value="examination schedules and date sheets">Examination Schedules & Date Sheets</option>
+                  <option value="scholarships and financial aid">Scholarships & Financial Aid</option>
+                  <option value="internships and placements">Internships & Placements</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top:12px">Save Profile Preferences ✓</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       4. FLOATING GUARDIAN AI WIDGET & SLIDE-OVER DRAWER
+       ========================================================================= -->
+  <button class="guardian-floating-btn" id="btnFloatingGuardian" title="Open Guardian AI Assistant">
+    ♡
+  </button>
+
+  <div class="guardian-drawer" id="guardianDrawer">
+    <div class="drawer-header">
+      <div style="display:flex; align-items:center; gap:8px">
+        <div class="logo-shield" style="width:28px; height:28px; font-size:0.9rem">✦</div>
+        <strong>Guardian AI</strong>
+        <span class="pill pill-cyan" style="padding:1px 6px; font-size:0.65rem">Groq</span>
+      </div>
+      <button class="auth-close" id="btnCloseGuardianDrawer" style="position:static">✕</button>
+    </div>
+    <div class="drawer-messages" id="drawerMessages">
+      <div class="chat-bubble assistant">
+        Hi! ♡ I'm your student safety assistant. Ask me about bill calculations, fake offer markers, or college notices!
+      </div>
+    </div>
+    <form id="drawerForm" class="drawer-input-form">
+      <input type="text" id="drawerInput" placeholder="Ask Guardian AI…" required>
+      <button type="submit" class="btn btn-gradient btn-sm">Send</button>
+    </form>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
