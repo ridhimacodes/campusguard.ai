@@ -4,12 +4,17 @@
 
 ---
 
-## 👥 Team ThinkStack
-- **Ridhima** — *Team Leader & Product Architect*
-- **Naksh Maan** — *Full-Stack Engineer & API Integrations*
-- **Bhumi Khemani** — *UI/UX & Product Design*
-- **Divyanshi Garg** — *Research & Evidence Engineering*
-- **Sanghavi Singh** — *Safety & Verification Systems*
+## 👥 Team THINKSTACK
+
+- **Ridhima**
+- **Naksh Maan**
+- **Bhumi Khemani**
+- **Divyanshi Garg**
+- **Sanghavi Singh**
+
+### 🤖 Development Approach
+
+CampusGuard.AI was developed using **AI-assisted coding and vibe coding**. Our team leveraged AI tools to support code generation, debugging, UI development, and implementation while collaboratively shaping the project's ideas, features, and user experience.
 
 ---
 
